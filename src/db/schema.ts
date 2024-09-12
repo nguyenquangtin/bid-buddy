@@ -6,11 +6,7 @@ import {
   timestamp,
   text,
 } from "drizzle-orm/pg-core";
-import { AdapterAccountType } from "next-auth/adapters";
-
-export const bids = pgTable("bb_bids", {
-  id: serial("id").primaryKey(),
-});
+import { AdapterAccount } from "next-auth/adapters";
 
 export const users = pgTable("bb_user", {
   id: text("id")
@@ -28,7 +24,7 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
+    type: text("type").$type<AdapterAccount>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -67,3 +63,15 @@ export const verificationTokens = pgTable(
     }),
   }),
 );
+
+export const bids = pgTable("bb_bids", {
+  id: serial("id").primaryKey(),
+});
+
+export const items = pgTable("bb_item", {
+  id: serial("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+});
